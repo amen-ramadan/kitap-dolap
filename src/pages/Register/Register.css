@@ -1,0 +1,62 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url("/src/assets/login-bg.png") no-repeat center center/cover;
+}
+
+.register-card {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 560px;
+  height: 770px;
+}
+
+.inputs-group {
+  margin-bottom: 1rem;
+}
+
+.inputs-group input {
+  width: 390px;
+  height: 62px;
+  margin: 15px auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1.2rem;
+}
+
+.register-card span {
+  display: block;
+  margin: 30px auto;
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.login-link {
+  color: #fff;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+
+.login-link a {
+  margin-top: 1rem;
+  display: block;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
