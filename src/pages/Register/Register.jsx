@@ -40,7 +40,7 @@ const Register = () => {
       <div className="register-card">
         <form onSubmit={handleSubmit}>
           <div className="inputs-group">
-            <Logo />
+            <Logo height={50} />
             <input
               type="text"
               name="name"
