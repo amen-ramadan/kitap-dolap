@@ -5,8 +5,10 @@ import Button from "../../components/Button/Button";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    userName: "",
     password: "",
     confirmPassword: "",
   });
@@ -43,10 +45,19 @@ const Register = () => {
             <Logo height={50} />
             <input
               type="text"
-              name="name"
-              value={formData.name}
+              name="firstName"
+              value={formData.firstName}
               onChange={handleChange}
-              placeholder="Your name"
+              placeholder="First name"
+              required
+            />
+
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="Last name"
               required
             />
 
@@ -56,6 +67,15 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Your email"
+              required
+            />
+
+            <input
+              type="text"
+              name="name"
+              value={formData.userName}
+              onChange={handleChange}
+              placeholder="User name in application"
               required
             />
 
