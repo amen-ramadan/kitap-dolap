@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import "./Register.css";
 import Logo from "../../components/Logo/Logo";
 import Button from "../../components/Button/Button";
@@ -34,30 +33,50 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validatePasswords()) return;
 
     setLoading(true);
+    setError("");
+
+    console.log("Sending data:", formData);
+
     try {
-      const response = await axios.post(
+      const response = await fetch(
         "https://localhost:9001/api/account/register",
-        formData,
         {
+          method: "POST",
           headers: { "Content-Type": "application/json" },
+          body: JSON.stringify( formData ),
         }
       );
 
-      console.log("Registration successful:", response.data);
-      alert("Account created successfully!");
+      const responseText = await response.text();
+      console.log("Raw server response:", responseText);
+
+      if (!response.ok) {
+        try {
+          const errorData = JSON.parse(responseText);
+          console.error("Server error response:", errorData);
+          throw new Error(
+            errorData.message || "Registration failed. Please try again."
+          );
+        } catch (e) {
+          console.error("Failed to parse error response:", e);
+          throw new Error(responseText || "Registration failed. Please try again.");
+        }
+      }
+
+      try {
+        const data = JSON.parse(responseText);
+        console.log("Registration successful:", data);
+        alert("Account created successfully!");
+      } catch {
+        // console.error("Failed to parse success response:", e);
+        alert("Account created successfully! (Non-JSON response)");
+      }
     } catch (error) {
-      console.error(
-        "Error registering:",
-        error.response?.data || error.message
-      );
-      setError(
-        error.response?.data?.message ||
-          "Registration failed. Please try again."
-      );
+      console.error("Error registering:", error.message);
+      setError(error.message);
     } finally {
       setLoading(false);
     }

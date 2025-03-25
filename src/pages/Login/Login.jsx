@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import "./Login.css";
 import Logo from "../../components/Logo/Logo";
 import Button from "../../components/Button/Button";
@@ -24,21 +23,24 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        "https://localhost:9001/api/account/authenticate",
-        formData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await fetch("https://localhost:9001/api/account/authenticate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-      console.log("Login successful:", response.data);
+      // Handle non-200 responses
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed. Please try again.");
+      }
+
+      const data = await response.json();
+      console.log("Login successful:", data);
       alert("Login successful! (Check console for details)");
     } catch (error) {
-      console.error("Login error:", error.response?.data || error.message);
-      setError(
-        error.response?.data?.message || "Login failed. Please try again."
-      );
+      console.error("Login error:", error.message);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
