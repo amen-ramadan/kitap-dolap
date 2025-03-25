@@ -13,6 +13,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,16 +25,36 @@ const Register = () => {
   // Validate passwords match
   const validatePasswords = () => {
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
       return false;
     }
     setError("");
     return true;
   };
 
+  // Validate username and password
+  const validateInputs = () => {
+    if (formData.userName.length < 6) {
+      setError("Username must be at least 6 characters long.");
+      return false;
+    }
+
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+    if (!passwordRegex.test(formData.password)) {
+      setError(
+        "Password must be 8-16 characters and include at least one uppercase letter, one number, and one special character."
+      );
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validatePasswords()) return;
+
+    if (!validateInputs() || !validatePasswords()) return;
 
     setLoading(true);
     setError("");
@@ -41,14 +62,11 @@ const Register = () => {
     console.log("Sending data:", formData);
 
     try {
-      const response = await fetch(
-        "https://localhost:9001/api/account/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify( formData ),
-        }
-      );
+      const response = await fetch("https://localhost:9001/api/account/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
       const responseText = await response.text();
       console.log("Raw server response:", responseText);
@@ -71,7 +89,6 @@ const Register = () => {
         console.log("Registration successful:", data);
         alert("Account created successfully!");
       } catch {
-        // console.error("Failed to parse success response:", e);
         alert("Account created successfully! (Non-JSON response)");
       }
     } catch (error) {
