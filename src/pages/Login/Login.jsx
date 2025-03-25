@@ -1,16 +1,47 @@
 import { useState } from "react";
+import axios from "axios";
 import "./Login.css";
 import Logo from "../../components/Logo/Logo";
 import Button from "../../components/Button/Button";
 import { Link } from "react-router";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Logging in with:", email, password);
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await axios.post(
+        "https://localhost:9001/api/account/authenticate",
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      console.log("Login successful:", response.data);
+      alert("Login successful! (Check console for details)");
+    } catch (error) {
+      console.error("Login error:", error.response?.data || error.message);
+      setError(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -21,24 +52,32 @@ const Login = () => {
             <Logo height={70} />
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Enter your e-mail"
               required
             />
 
             <input
               type="password"
+              name="password"
               minLength={8}
               maxLength={16}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Enter your password"
               required
             />
           </div>
-          <Button type="submit">Login</Button>
+
+          {error && <p className="error-message">{error}</p>}
+
+          <Button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </Button>
         </form>
+
         <span>OR</span>
         <p className="register-link">
           Don't have an account?{" "}

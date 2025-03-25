@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import "./Register.css";
 import Logo from "../../components/Logo/Logo";
 import Button from "../../components/Button/Button";
@@ -14,6 +15,7 @@ const Register = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -30,12 +32,35 @@ const Register = () => {
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validatePasswords()) return;
 
-    // Send data to API
-    console.log("Sending data to API:", formData);
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "https://localhost:9001/api/account/register",
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      console.log("Registration successful:", response.data);
+      alert("Account created successfully!");
+    } catch (error) {
+      console.error(
+        "Error registering:",
+        error.response?.data || error.message
+      );
+      setError(
+        error.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,7 +77,6 @@ const Register = () => {
               placeholder="First name"
               required
             />
-
             <input
               type="text"
               name="lastName"
@@ -61,7 +85,6 @@ const Register = () => {
               placeholder="Last name"
               required
             />
-
             <input
               type="email"
               name="email"
@@ -70,7 +93,6 @@ const Register = () => {
               placeholder="Your email"
               required
             />
-
             <input
               type="text"
               name="userName"
@@ -79,7 +101,6 @@ const Register = () => {
               placeholder="User name in application"
               required
             />
-
             <input
               type="password"
               name="password"
@@ -90,7 +111,6 @@ const Register = () => {
               placeholder="Enter your password"
               required
             />
-
             <input
               type="password"
               name="confirmPassword"
@@ -101,11 +121,12 @@ const Register = () => {
               placeholder="Confirm your password"
               required
             />
-
             {error && <p className="error-message">{error}</p>}
           </div>
 
-          <Button type="submit">Register</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? "Registering..." : "Register"}
+          </Button>
         </form>
 
         <span>OR</span>
