@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./Login.css";
 import Logo from "../../components/Logo/Logo";
 import Button from "../../components/Button/Button";
+import { Link } from "react-router";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ const Login = () => {
       <div className="login-card">
         <form onSubmit={handleSubmit}>
           <div className="inputs-group">
-            <Logo height={50} />
+            <Logo height={70} />
             <input
               type="email"
               value={email}
@@ -40,7 +41,8 @@ const Login = () => {
         </form>
         <span>OR</span>
         <p className="register-link">
-          Don't have an account? <a href="/register">Create a new account</a>
+          Don't have an account?{" "}
+          <Link to="/register">Create a new account</Link>
         </p>
       </div>
     </div>

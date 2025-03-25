@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./Register.css";
 import Logo from "../../components/Logo/Logo";
 import Button from "../../components/Button/Button";
+import { Link } from "react-router";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -72,7 +73,7 @@ const Register = () => {
 
             <input
               type="text"
-              name="name"
+              name="userName"
               value={formData.userName}
               onChange={handleChange}
               placeholder="User name in application"
@@ -109,7 +110,7 @@ const Register = () => {
 
         <span>OR</span>
         <p className="login-link">
-          Already have an account? <a href="/login">Login</a>
+          Already have an account? <Link to="/login">Login</Link>
         </p>
       </div>
     </div>
