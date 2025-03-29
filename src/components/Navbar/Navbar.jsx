@@ -26,9 +26,13 @@ const Navbar = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ backgroundColor: "#1d6594ba" }}>
         <Toolbar
-          sx={{ display: "flex", justifyContent: "space-between", px: 3 }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            px: 3,
+          }}
         >
           {/* Left Side - User Icon */}
           <Box sx={{ marginLeft: 3 }}>
