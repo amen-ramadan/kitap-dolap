@@ -9,7 +9,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const usePostsStore = create((set) => ({
-  // Zustand state (للحالة المحلية فقط)
+  // Zustand state
   selectedPost: null,
   setSelectedPost: (post) => set({ selectedPost: post }),
 
