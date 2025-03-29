@@ -1,10 +1,10 @@
 import React from "react";
-import { usePostsStore } from "../../store";
+import { useBooksStore } from "../../store";
 
 export default function Home() {
-  const { usePostsQuery } = usePostsStore();
+  const { useBooksQuery } = useBooksStore();
 
-  const { data: posts, isLoading, error } = usePostsQuery();
+  const { data: books, isLoading, error } = useBooksQuery();
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -21,9 +21,9 @@ export default function Home() {
           flexWrap: "wrap",
         }}
       >
-        {posts?.map((post) => (
+        {books?.map((book) => (
           <div
-            key={post.id}
+            key={book.id}
             style={{
               margin: "16px",
               display: "flex",
@@ -44,11 +44,11 @@ export default function Home() {
                 listStyleType: "decimal",
               }}
             >
-              {post.title}
+              {book.title}
             </li>
             <img
-              src={post.image}
-              alt={post.title}
+              src={book.image}
+              alt={book.title}
               width={200}
               height={200}
               loading="lazy"
@@ -60,7 +60,7 @@ export default function Home() {
                 color: "rgb(176 176 177)",
               }}
             >
-              {post.description}
+              {book.description}
             </p>
           </div>
         ))}

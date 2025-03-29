@@ -1,58 +1,58 @@
 import { create } from "zustand";
 import {
-  fetchPosts,
-  fetchPostById,
-  createPost,
-  updatePost,
-  deletePost,
+  fetchBooks,
+  fetchBookById,
+  createBook,
+  updateBook,
+  deleteBook,
 } from "./api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const usePostsStore = create((set) => ({
+export const useBooksStore = create((set) => ({
   // Zustand state
-  selectedPost: null,
-  setSelectedPost: (post) => set({ selectedPost: post }),
+  selectedBook: null,
+  setSelectedBook: (book) => set({ selectedBook: book }),
 
   // React Query Operations
-  usePostsQuery: () =>
+  useBooksQuery: () =>
     useQuery({
-      queryKey: ["posts"],
-      queryFn: fetchPosts,
+      queryKey: ["books"],
+      queryFn: fetchBooks,
     }),
 
-  usePostQuery: (id) =>
+  useBookQuery: (id) =>
     useQuery({
-      queryKey: ["post", id],
-      queryFn: () => fetchPostById(id),
+      queryKey: ["book", id],
+      queryFn: () => fetchBookById(id),
       enabled: !!id,
     }),
 
-  useCreatePost: () => {
+  useCreateBook: () => {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: createPost,
+      mutationFn: createBook,
       onSuccess: () => {
-        queryClient.invalidateQueries(["posts"]);
+        queryClient.invalidateQueries(["books"]);
       },
     });
   },
 
-  useUpdatePost: () => {
+  useUpdateBook: () => {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: updatePost,
+      mutationFn: updateBook,
       onSuccess: () => {
-        queryClient.invalidateQueries(["posts"]);
+        queryClient.invalidateQueries(["books"]);
       },
     });
   },
 
-  useDeletePost: () => {
+  useDeleteBook: () => {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: deletePost,
+      mutationFn: deleteBook,
       onSuccess: () => {
-        queryClient.invalidateQueries(["posts"]);
+        queryClient.invalidateQueries(["books"]);
       },
     });
   },
