@@ -43,7 +43,7 @@ function App() {
             }
           />
           <Route
-            path="my-books"
+            path="My Listings"
             element={
               <ProtectedRoute>
                 <MyBooks />
@@ -51,7 +51,7 @@ function App() {
             }
           />
           <Route
-            path="my-blogs"
+            path="My Blogs"
             element={
               <ProtectedRoute>
                 <MyBlogs />

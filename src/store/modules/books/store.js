@@ -1,12 +1,12 @@
 import { create } from "zustand";
 import {
   fetchBooks,
-  fetchBookById,
-  createBook,
-  updateBook,
-  deleteBook,
+  // fetchBookById,
+  // createBook,
+  // updateBook,
+  // deleteBook,
 } from "./api";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export const useBooksStore = create((set) => ({
   // Zustand state
@@ -20,40 +20,42 @@ export const useBooksStore = create((set) => ({
       queryFn: fetchBooks,
     }),
 
-  useBookQuery: (id) =>
-    useQuery({
-      queryKey: ["book", id],
-      queryFn: () => fetchBookById(id),
-      enabled: !!id,
-    }),
+  // useBookQuery: (id) =>
+  //   useQuery({
+  //     queryKey: ["book", id],
+  //     queryFn: () => fetchBookById(id),
+  //     enabled: !!id,
+  //   }),
 
-  useCreateBook: () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-      mutationFn: createBook,
-      onSuccess: () => {
-        queryClient.invalidateQueries(["books"]);
-      },
-    });
-  },
+  // useCreateBook: () => {
+  //   const queryClient = useQueryClient();
+  //   return useMutation({
+  //     mutationFn: createBook,
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries(["books"]);
+  //     },
+  //   });
+  // },
 
-  useUpdateBook: () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-      mutationFn: updateBook,
-      onSuccess: () => {
-        queryClient.invalidateQueries(["books"]);
-      },
-    });
-  },
+  // useUpdateBook: () => {
+  //   const queryClient = useQueryClient();
+  //   return useMutation({
+  //     mutationFn: updateBook,
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries(["books"]);
+  //     },
+  //   });
+  // },
 
-  useDeleteBook: () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-      mutationFn: deleteBook,
-      onSuccess: () => {
-        queryClient.invalidateQueries(["books"]);
-      },
-    });
-  },
+  // useDeleteBook: () => {
+  //   const queryClient = useQueryClient();
+  //   return useMutation({
+  //     mutationFn: deleteBook,
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries(["books"]);
+  //     },
+  //   });
+  // },
 }));
+
+// , useMutation, useQueryClient

@@ -41,7 +41,7 @@ const Navbar = () => {
 
           {/* Center - Navigation Buttons */}
           <Box sx={{ display: "flex", gap: 3 }}>
-            {["/", "/blogs", "/favorites", "/my-books", "/my-blogs"].map(
+            {["/", "/Blogs", "/Favorites", "/My Listings", "/My Blogs"].map(
               (path, index) => (
                 <Button
                   key={index}
