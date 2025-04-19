@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://fakestoreapi.com/products";
+const API_URL = "http://localhost:3000/data";
 
 export const fetchBooks = async () => {
   const response = await axios.get(API_URL);
