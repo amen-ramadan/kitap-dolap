@@ -1,16 +1,19 @@
 import { useState } from "react";
+import useAuthStore from "../../store/authStore";
 import "./Login.css";
 import Logo from "../../components/Logo/Logo";
 import Button from "../../components/Button/Button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const Login = () => {
+  const setToken = useAuthStore((state) => state.setToken);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate ();
 
   // Handle input changes
   const handleChange = (e) => {
@@ -40,6 +43,8 @@ const Login = () => {
 
       const data = await response.json();
       console.log("Login successful:", data);
+      setToken(data.jwToken);
+      navigate("/");
       alert("Login successful! (Check console for details)");
     } catch (error) {
       console.error("Login error:", error.message);

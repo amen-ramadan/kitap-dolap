@@ -1,27 +1,22 @@
-// src/components/SearchBar.jsx
-import React, { useState } from "react";
-import {
-  Box,
-  TextField,
-  InputAdornment,
-  IconButton,
-  Typography,
-  Button,
-} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, TextField, InputAdornment, Button } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useBooksStore } from "../../store/modules/books/store";
 
 export default function SearchBar() {
-  const { books, filterBooks } = useBooksStore();
+  const { filterBooks } = useBooksStore();
   const [searchInputValue, setSearchInputValue] = useState("");
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setSearchInputValue(value);
-    // تحديث البحث في الـ store بعد تأخير قصير
-    setTimeout(() => {
-      filterBooks(books, value);
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      filterBooks(searchInputValue);
     }, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchInputValue]);
+
+  const handleChange = (e) => {
+    setSearchInputValue(e.target.value);
   };
 
   return (

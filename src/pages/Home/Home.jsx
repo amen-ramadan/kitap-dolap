@@ -1,56 +1,16 @@
-import React from "react";
-import {
-  Box,
-  CircularProgress,
-  Typography,
-  Grid,
-  Container,
-} from "@mui/material";
+import React, { useEffect } from "react";
+import { Box, Grid, Container, Typography } from "@mui/material";
 import { useBooksStore } from "../../store/modules/books/store";
 import BookCard from "../../components/BookCard/BookCard";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import AdvancedSearchDialog from "../../components/dialog/AdvancedSearchDialog";
 
 export default function Home() {
-  const { books, filteredBooks, setBooks, useBooksQuery } = useBooksStore();
-  const { data, isLoading, error, isFetching } = useBooksQuery();
+  const { fetchBooks, isLoading, filteredBooks } = useBooksStore();
 
-  console.log(filteredBooks);
-
-  // تحميل الكتب الأساسية
-  React.useEffect(() => {
-    if (data) {
-      setBooks(data);
-    }
-  }, [data, setBooks]);
-
-  // استخدام الكتب المصفاة
-  const booksToShow = filteredBooks.length > 0 ? filteredBooks : books;
-
-  if (isLoading || isFetching) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-          <CircularProgress />
-        </Box>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ textAlign: "center", py: 4 }}>
-          <Typography color="error" variant="h6">
-            Error loading books
-          </Typography>
-          <Typography color="error" sx={{ mt: 1 }}>
-            {error.message}
-          </Typography>
-        </Box>
-      </Container>
-    );
-  }
+  useEffect(() => {
+    fetchBooks();
+  }, []);
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -58,12 +18,21 @@ export default function Home() {
         <SearchBar />
         <AdvancedSearchDialog />
       </Box>
+
       <Grid container spacing={3}>
-        {booksToShow.map((book) => (
-          <Grid key={book.id}>
-            <BookCard book={book} />
+        {!isLoading && filteredBooks?.length === 0 ? (
+          <Grid>
+            <Typography align="center" sx={{ py: 4 }}>
+              No books found
+            </Typography>
           </Grid>
-        ))}
+        ) : (
+          filteredBooks?.map((book) => (
+            <Grid key={book.id}>
+              <BookCard book={book} />
+            </Grid>
+          ))
+        )}
       </Grid>
     </Container>
   );

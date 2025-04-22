@@ -1,15 +1,12 @@
 import { create } from "zustand";
-import {
-  fetchBooks,
-  fetchSearchBooks,
-  // fetchBookById,
-  // createBook,
-  // updateBook,
-  // deleteBook,
-} from "./api";
-import { useQuery } from "@tanstack/react-query";
+import { fetchSearchBooks } from "./api";
 
 export const useBooksStore = create((set, get) => ({
+  // UI State
+  showAdvanced: false,
+  setShowAdvanced: (show) => set({ showAdvanced: show }),
+
+  // Params
   searchParams: {
     PageNumber: 1,
     PageSize: 10,
@@ -21,92 +18,44 @@ export const useBooksStore = create((set, get) => ({
     SortDescending: false,
     Author: "",
   },
-  showAdvanced: false,
-  setShowAdvanced: (show) => set({ showAdvanced: show }),
-
-  // updater
-  setSearchParams: (patch) => {
+  setSearchParams: (patch) =>
     set((state) => ({
       searchParams: { ...state.searchParams, ...patch },
-    }));
-  },
+    })),
 
+  // Books
   books: [],
   filteredBooks: [],
-  setBooks: (books) => set({ books }),
-  setFilteredBooks: (filteredBooks) => set({ filteredBooks }),
+  setBooks: (books) => set({ books, filteredBooks: books }), // set both
+  setFilteredBooks: (filtered) => set({ filteredBooks: filtered }),
 
-  // React Query Operations
-  useBooksQuery: () =>
-    useQuery({
-      queryKey: ["books"],
-      queryFn: fetchBooks,
-      onSuccess: (data) => {
-        set({ books: data });
-      },
-    }),
+  // Async loading flag (اختياري لو بدك تحط Loader)
+  isLoading: false,
 
-  useSearchBooksQuery: () => {
-    const params = get().searchParams;
-    return useQuery({
-      queryKey: ["searchBooks", params],
-      queryFn: () => fetchSearchBooks(params),
-      keepPreviousData: true,
-      onSuccess: (data) => {
-        set({ filteredBooks: data });
-      },
-    });
+  // Fetch books from API
+  fetchBooks: async (overrideParams = {}) => {
+    set({ isLoading: true });
+    try {
+      const finalParams = { ...get().searchParams, ...overrideParams };
+      const data = await fetchSearchBooks(finalParams);
+      set({ books: data.data });
+    } catch (error) {
+      console.error("Failed to fetch books:", error);
+    } finally {
+      set({ isLoading: false });
+    }
   },
+  filterBooks: (searchTerm) => {
+    const books = get().books;
+    if (!searchTerm) return set({ filteredBooks: books });
 
-  filterBooks: (books, searchTerm) => {
-    if (!searchTerm) return books;
     const lowerCaseTerm = searchTerm.toLowerCase();
     const newBooks = books.filter(
       (book) =>
         book.title.toLowerCase().includes(lowerCaseTerm) ||
         book.author.toLowerCase().includes(lowerCaseTerm)
     );
+
     set({ filteredBooks: newBooks });
-    return newBooks;
   },
 }));
-
-// useBookQuery: (id) =>
-//   useQuery({
-//     queryKey: ["book", id],
-//     queryFn: () => fetchBookById(id),
-//     enabled: !!id,
-//   }),
-
-// useCreateBook: () => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: createBook,
-//     onSuccess: () => {
-//       queryClient.invalidateQueries(["books"]);
-//     },
-//   });
-// },
-
-// useUpdateBook: () => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: updateBook,
-//     onSuccess: () => {
-//       queryClient.invalidateQueries(["books"]);
-//     },
-//   });
-// },
-
-// useDeleteBook: () => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: deleteBook,
-//     onSuccess: () => {
-//       queryClient.invalidateQueries(["books"]);
-//     },
-//   });
-// },
-// }));
-
-// , useMutation, useQueryClient

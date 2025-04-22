@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useAuthStore from "../../store/authStore";
 import {
   AppBar,
   Toolbar,
@@ -9,12 +10,13 @@ import {
   MenuItem,
   Container,
 } from "@mui/material";
-import { NavLink, Outlet } from "react-router";
+import { NavLink, Outlet, Navigate, useNavigate } from "react-router";
 import Logo from "../Logo/Logo";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate ();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -23,6 +25,11 @@ const Navbar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleLogout = () => {
+    useAuthStore.getState().clearToken();
+    setAnchorEl(null);
+    navigate("/login");
+};
 
   return (
     <>
@@ -92,7 +99,7 @@ const Navbar = () => {
               onClose={handleClose}
             >
               <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </Box>
         </Toolbar>

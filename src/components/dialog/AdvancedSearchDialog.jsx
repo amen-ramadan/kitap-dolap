@@ -17,19 +17,20 @@ import { useForm, Controller } from "react-hook-form";
 import { useBooksStore } from "../../store/modules/books/store";
 
 export default function AdvancedSearchDialog() {
-  const { searchParams, setSearchParams, showAdvanced } = useBooksStore();
+  const { searchParams, setSearchParams, showAdvanced, fetchBooks } =
+    useBooksStore();
+
   const { control, handleSubmit, reset } = useForm({
     defaultValues: searchParams,
   });
 
   const onSubmit = (values) => {
-    // Update search parameters and close dialog
-    setSearchParams({ ...values, pageNumber: 1 });
+    setSearchParams({ ...values, PageNumber: 1 });
+    fetchBooks({ ...values, PageNumber: 1 });
     useBooksStore.setState({ showAdvanced: false });
   };
 
   const handleClose = () => {
-    // Reset form and close dialog
     reset(searchParams);
     useBooksStore.setState({ showAdvanced: false });
   };
@@ -73,6 +74,7 @@ export default function AdvancedSearchDialog() {
             <FormControl fullWidth sx={{ mt: 2 }}>
               <InputLabel>Condition</InputLabel>
               <Select label="Condition" {...field}>
+                <MenuItem value="">Any</MenuItem>
                 {[...Array(10)].map((_, i) => (
                   <MenuItem key={i} value={i + 1}>
                     {i + 1}
@@ -98,6 +100,7 @@ export default function AdvancedSearchDialog() {
             <FormControl fullWidth sx={{ mt: 2 }}>
               <InputLabel>Sort By</InputLabel>
               <Select label="Sort By" {...field}>
+                <MenuItem value="">None</MenuItem>
                 <MenuItem value="price">Price</MenuItem>
                 <MenuItem value="created">Date</MenuItem>
               </Select>
