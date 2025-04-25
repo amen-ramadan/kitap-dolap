@@ -19,10 +19,18 @@ export default function Home() {
         <AdvancedSearchDialog />
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid
+        container
+        spacing={3}
+        sx={{ mx: "auto", alignItems: "center", justifyContent: "center" }}
+      >
         {!isLoading && filteredBooks?.length === 0 ? (
           <Grid>
-            <Typography align="center" sx={{ py: 4 }}>
+            <Typography
+              align="center"
+              variant="h4"
+              sx={{ py: 4, color: "#c69746" }}
+            >
               No books found
             </Typography>
           </Grid>

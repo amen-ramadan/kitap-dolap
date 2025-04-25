@@ -15,7 +15,7 @@ import BookDialog from "../dialog/DetailsDialog";
  * Props:
  * - book: { imageUrl, title, author, price, sellerName }
  */
-const BookCard = ({ book }) => {
+const BookCard = ({ book, children, height }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -27,19 +27,28 @@ const BookCard = ({ book }) => {
         sx={{
           display: "flex",
           cursor: "pointer",
-          maxWidth: 500,
-          minWidth: 500,
+          maxWidth: 530,
+          minWidth: 530,
           p: 1,
           boxShadow: 3,
           border: "1px solid #ccc",
           backgroundColor: "#1d659433",
+          transition: "all 0.5s ease",
+          "&:hover": {
+            backgroundColor: "#3c5264",
+          },
         }}
       >
         <CardMedia
           component="img"
           image={book.imageUrl}
           alt={book.title}
-          sx={{ width: 120, height: 175, borderRadius: 1, objectFit: "cover" }}
+          sx={{
+            width: 180,
+            height: height,
+            borderRadius: 1,
+            objectFit: "contain",
+          }}
         />
         <CardContent
           sx={{
@@ -75,6 +84,7 @@ const BookCard = ({ book }) => {
               <FavoriteIcon />
             </IconButton>
           </Box>
+          {children}
         </CardContent>
       </Card>
       <BookDialog book={book} open={open} onClose={handleClose} />

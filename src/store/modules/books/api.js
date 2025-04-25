@@ -1,7 +1,7 @@
 import axios from "axios";
 // import useAuthStore from "../../authStore";
 
-const API_SEARCH_URL = "https://localhost:9001/api/v1/";
+// const API_SEARCH_URL = "https://localhost:9001/api/v1/";
 
 // // Create axios instance
 // export const api = axios.create({ baseURL: API_SEARCH_URL });
@@ -15,15 +15,7 @@ const API_SEARCH_URL = "https://localhost:9001/api/v1/";
 //   return config;
 // });
 
-// Search books without auth
-export const fetchSearchBooks = async (params) => {
-  const { data } = await axios.get(`${API_SEARCH_URL}BookListing/search`, {
-    params,
-  });
-  return data;
-};
-
-// // for edit in my amen desktop
+// // Search books without auth
 // export const fetchSearchBooks = async (params) => {
 //   const { data } = await axios.get(`${API_SEARCH_URL}BookListing/search`, {
 //     params,
@@ -53,3 +45,17 @@ export const fetchSearchBooks = async (params) => {
 //   }
 //   return false;
 // };
+
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+// for edit in my amen desktop
+export const fetchSearchBooks = async () => {
+  const data = await axios.get("http://localhost:3000/data");
+  return data;
+};
+
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////

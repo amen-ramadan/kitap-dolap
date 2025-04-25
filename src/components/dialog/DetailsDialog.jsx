@@ -13,10 +13,10 @@ import {
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { useBooksStore } from "../../store/modules/books/store";
+// import { useBooksStore } from "../../store/modules/books/store";
 
 const BookDialog = ({ book, open, onClose }) => {
-  const { checkFavorite } = useBooksStore();
+  // const { checkFavorite } = useBooksStore();
 
   // const clickFavorite = async () => {
   //   const result = await checkFavorite(book.id);
@@ -34,7 +34,11 @@ const BookDialog = ({ book, open, onClose }) => {
       fullWidth
       sx={{ "& .MuiDialog-paper": { overflow: "hidden" } }}
     >
-      <DialogTitle>Book details</DialogTitle>
+      <DialogTitle
+        sx={{ fontWeight: "bold", textAlign: "center", fontSize: 30 }}
+      >
+        Book details
+      </DialogTitle>
       <DialogContent sx={{ overflow: "hidden", display: "flex", gap: 2 }}>
         <CardMedia
           component="img"
@@ -83,7 +87,8 @@ const BookDialog = ({ book, open, onClose }) => {
             sx={{ mt: 2, ":hover": { color: "red" } }}
             // onClick={clickFavorite}
           >
-            <FavoriteIcon sx={{ color: checkFavorite(book.id) ? "red" : "" }} />
+            {/* <FavoriteIcon sx={{ color: checkFavorite(book.id) ? "red" : "" }} /> */}
+            <FavoriteIcon />
           </IconButton>
           <Box
             sx={{
@@ -114,11 +119,13 @@ const BookDialog = ({ book, open, onClose }) => {
       <DialogActions sx={{ mt: 1 }}>
         <Button
           onClick={onClose}
+          variant="contained"
           sx={{
-            width: 100,
-            height: 40,
-            color: "black",
-            "&:hover": { backgroundColor: "#1d6594ba" },
+            px: 4,
+            height: "auto",
+            color: "white",
+            backgroundColor: "#d3302f",
+            "&:hover": { backgroundColor: "darkred", color: "white" },
           }}
         >
           Close
