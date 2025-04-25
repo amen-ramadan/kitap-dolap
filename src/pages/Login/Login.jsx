@@ -13,7 +13,7 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate ();
+  const navigate = useNavigate();
 
   // Handle input changes
   const handleChange = (e) => {

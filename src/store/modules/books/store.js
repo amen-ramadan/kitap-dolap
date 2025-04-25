@@ -1,5 +1,11 @@
 import { create } from "zustand";
-import { fetchSearchBooks } from "./api";
+import {
+  // AddFavorite,
+  // CheckFavoriteBook,
+  // DeleteFavorite,
+  // fetchFavoritesBooks,
+  fetchSearchBooks,
+} from "./api";
 
 export const useBooksStore = create((set, get) => ({
   // UI State
@@ -28,17 +34,15 @@ export const useBooksStore = create((set, get) => ({
   filteredBooks: [],
   setBooks: (books) => set({ books, filteredBooks: books }), // set both
   setFilteredBooks: (filtered) => set({ filteredBooks: filtered }),
-
-  // Async loading flag (اختياري لو بدك تحط Loader)
   isLoading: false,
 
-  // Fetch books from API
+  // Fetch and Filter books
   fetchBooks: async (overrideParams = {}) => {
     set({ isLoading: true });
     try {
       const finalParams = { ...get().searchParams, ...overrideParams };
       const data = await fetchSearchBooks(finalParams);
-      set({ books: data.data });
+      set({ books: data.data, filteredBooks: data.data });
     } catch (error) {
       console.error("Failed to fetch books:", error);
     } finally {
@@ -58,4 +62,35 @@ export const useBooksStore = create((set, get) => ({
 
     set({ filteredBooks: newBooks });
   },
+
+  // // Favorite
+  // favorites: [],
+  // setFavorites: (favorites) => set({ favorites }),
+
+  // fetchFavorites: async () => {
+  //   set({ isLoading: true });
+  //   try {
+  //     const data = await fetchFavoritesBooks();
+  //     set({ favorites: data.data });
+  //   } catch (error) {
+  //     console.error("Failed to fetch favorites:", error);
+  //   } finally {
+  //     set({ isLoading: false });
+  //   }
+  // },
+  // checkFavorite: async (id) => {
+  //   return await CheckFavoriteBook(id);
+  // },
+  // addFavorite: async (id) => {
+  //   const isFavorite = await get().checkFavorite(id);
+  //   if (isFavorite) {
+  //     return "Already in favorites";
+  //   } else {
+  //     const added = await AddFavorite(id);
+  //     return added ? "Added to favorites" : "Failed to add to favorites";
+  //   }
+  // },
+  // deleteFavorite: async (id) => {
+  //   return await DeleteFavorite(id);
+  // },
 }));
