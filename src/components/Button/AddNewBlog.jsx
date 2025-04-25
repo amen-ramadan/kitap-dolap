@@ -1,9 +1,9 @@
 import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box } from "@mui/material";
-import AddBookDialog from "../dialog/AddBookDialog";
+import AddBlogDialog from "../dialog/AddBlogDialog";
 
-export default function AddNewBook() {
+export default function AddNewBlog() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -36,7 +36,7 @@ export default function AddNewBook() {
       >
         <AddIcon sx={{ fontSize: 30 }} />
       </Box>
-      <AddBookDialog open={open} onClose={handleClose} />
+      <AddBlogDialog open={open} onClose={handleClose} />
     </>
   );
 }

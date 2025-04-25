@@ -41,6 +41,13 @@ export default function AddDialog({ open, onClose }) {
       // هون بتضيف الكتاب أو بتكمل العملية
       console.log("Book ready to be added:", book);
       onClose();
+      setBook({
+        title: "",
+        author: "",
+        price: "",
+        condition: 10,
+        imageUrl: "",
+      });
     }
   };
 
