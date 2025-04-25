@@ -1,8 +1,13 @@
 import React from "react";
+import { Typography } from "@mui/material";
 import BookCard from "../../components/BookCard/BookCard";
 
 export default function Favorites() {
-  return <h1>Favorite Books</h1>;
+  return (
+    <Typography variant="h4" align="center" sx={{ mb: 4, color: "#c69746" }}>
+      My Favorites
+    </Typography>
+  );
 }
 
 // import React from "react";

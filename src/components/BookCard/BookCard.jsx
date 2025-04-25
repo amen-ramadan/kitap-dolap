@@ -80,8 +80,23 @@ const BookCard = ({ book, children, height }) => {
             <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
               @{book.sellerName || "sellerName"}
             </Typography>
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
+            <IconButton
+              aria-label="add to favorites"
+              sx={{
+                color: "#fff",
+                width: "initial",
+                height: "initial",
+                p: 2,
+                fontSize: 12,
+                backgroundColor: "#1e5d8e",
+                "&:hover": { backgroundColor: "#1e4462" },
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              add to favorites
+              <FavoriteIcon sx={{ ml: 1 }} />
             </IconButton>
           </Box>
           {children}

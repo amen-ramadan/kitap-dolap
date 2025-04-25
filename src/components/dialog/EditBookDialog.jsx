@@ -46,7 +46,8 @@ export default function EditBookDialog({ open, onClose, book }) {
               flexDirection: "column",
               gap: 2,
               alignItems: "center",
-              mt: 2,
+              p: 4,
+              backgroundColor: "#eee",
             }}
           >
             <TextField

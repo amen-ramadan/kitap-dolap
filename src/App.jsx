@@ -18,22 +18,8 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         <Route path="/" element={<Navbar />}>
-          <Route
-            index
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="blogs"
-            element={
-              <ProtectedRoute>
-                <Blogs />
-              </ProtectedRoute>
-            }
-          />
+          <Route index element={<Home />} />
+          <Route path="blogs" element={<Blogs />} />
           <Route
             path="favorites"
             element={

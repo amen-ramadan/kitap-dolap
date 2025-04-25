@@ -38,10 +38,6 @@ export default function BlogsPage() {
         </Typography>
       ) : (
         <div>
-          <Typography variant="h4" align="center">
-            Our Blogs
-          </Typography>
-
           <Grid
             container
             spacing={4}
