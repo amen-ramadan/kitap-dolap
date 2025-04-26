@@ -1,7 +1,7 @@
 import React from "react";
 import BookCard from "../../components/BookCard/BookCard";
 import { useBooksStore } from "../../store/modules/books/store";
-import EditAndRemoveButtons from "../../components/Button/EditAndRemoveButtons";
+import EditAndRemoveBookButtons from "../../components/Button/EditAndRemoveBookButtons";
 import { Grid, Typography } from "@mui/material";
 import AddNewBook from "../../components/Button/AddNewBook";
 
@@ -28,7 +28,7 @@ export default function MyBooks() {
           filteredBooks?.map((book) => (
             <Grid key={book.id}>
               <BookCard key={book.id} book={book}>
-                <EditAndRemoveButtons book={book} />
+                <EditAndRemoveBookButtons book={book} />
               </BookCard>
             </Grid>
           ))

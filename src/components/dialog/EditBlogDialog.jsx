@@ -7,12 +7,9 @@ import {
   Button,
   Box,
   TextField,
-  CardMedia,
-  Select,
-  MenuItem,
 } from "@mui/material";
 
-export default function EditBookDialog({ open, onClose, book }) {
+export default function EditBlogDialog({ open, onClose, blog }) {
   return (
     <Dialog
       open={open}
@@ -24,66 +21,36 @@ export default function EditBookDialog({ open, onClose, book }) {
       <DialogTitle
         sx={{ fontWeight: "bold", textAlign: "center", fontSize: 30 }}
       >
-        Edit Book
+        Edit Blog
       </DialogTitle>
       <DialogContent>
         <Box element="form" sx={{ display: "flex", gap: 2 }}>
-          {/* image */}
-          <Box sx={{ width: "40%", objectFit: "cover", borderRadius: 1 }}>
-            <CardMedia
-              component="img"
-              image={book.imageUrl}
-              alt={book.title}
-              sx={{ width: "100%", height: "100%" }}
-            />
-          </Box>
           {/* details */}
           <Box
             sx={{
-              width: "60%",
+              width: "100%",
               display: "flex",
               flexDirection: "column",
               gap: 2,
               alignItems: "center",
               p: 4,
-              backgroundColor: "#eee",
+              // backgroundColor: "#eee",
             }}
           >
             <TextField
               label="Title"
               variant="outlined"
               fullWidth
-              value={book.title}
+              value={blog.title}
             />
             <TextField
-              label="Author"
+              label="Content"
               variant="outlined"
               fullWidth
-              value={book.author}
+              multiline
+              rows={6}
+              value={blog.content}
             />
-            <TextField
-              label="Price"
-              variant="outlined"
-              fullWidth
-              value={book.price}
-            />
-            <Select
-              label="Condition"
-              variant="outlined"
-              fullWidth
-              value={book.condition}
-            >
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={9}>9</MenuItem>
-              <MenuItem value={8}>8</MenuItem>
-              <MenuItem value={7}>7</MenuItem>
-              <MenuItem value={6}>6</MenuItem>
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={1}>1</MenuItem>
-            </Select>
           </Box>
         </Box>
       </DialogContent>
