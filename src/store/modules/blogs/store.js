@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { fetchBlogs } from "./api";
+import { fetchBlogs, postBlog, editBlog, deleteBlog } from "./api";
 
 export const useBlogsStore = create((set) => ({
   // Data
@@ -16,6 +16,35 @@ export const useBlogsStore = create((set) => ({
     } catch (error) {
       console.error("Failed to fetch blogs:", error);
       set({ isLoading: false });
+    }
+  },
+
+  // Mutations
+  postBlog: async (data) => {
+    try {
+      const response = await postBlog(data);
+      return response;
+    } catch (error) {
+      console.error("Failed to post blog:", error);
+      return null;
+    }
+  },
+  editBlog: async (id, data) => {
+    try {
+      const response = await editBlog(id, data);
+      return response;
+    } catch (error) {
+      console.error("Failed to edit blog:", error);
+      return null;
+    }
+  },
+  deleteBlog: async (id) => {
+    try {
+      const response = await deleteBlog(id);
+      return response;
+    } catch (error) {
+      console.error("Failed to delete blog:", error);
+      return null;
     }
   },
 }));

@@ -8,8 +8,38 @@ import {
   Box,
   TextField,
 } from "@mui/material";
+import { useSnackbarStore } from "../../store/modules/snackbar";
+import { useBlogsStore } from "../../store/modules/blogs";
 
 export default function EditBlogDialog({ open, onClose, blog }) {
+  const [editBlog, setEditBlog] = React.useState({
+    title: blog.title,
+    content: blog.content,
+  });
+  const [errors, setErrors] = React.useState({});
+  const { setOpenSnackbar } = useSnackbarStore();
+  const { updateBlog } = useBlogsStore();
+
+  const handleSave = () => {
+    if (validate()) {
+      try {
+        updateBlog(editBlog);
+        setOpenSnackbar("Blog updated successfully", "success");
+      } catch (error) {
+        setOpenSnackbar("Failed to update blog" + error, "error");
+      }
+      onClose();
+      setEditBlog({ title: "", content: "" });
+    }
+  };
+  const validate = () => {
+    const newErrors = {};
+    if (!editBlog.title.trim()) newErrors.title = "Title is required";
+    if (!editBlog.content.trim()) newErrors.content = "Content is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   return (
     <Dialog
       open={open}
@@ -41,7 +71,12 @@ export default function EditBlogDialog({ open, onClose, blog }) {
               label="Title"
               variant="outlined"
               fullWidth
-              value={blog.title}
+              value={editBlog.title}
+              onChange={(e) =>
+                setEditBlog({ ...editBlog, title: e.target.value })
+              }
+              error={!!errors.title}
+              helperText={errors.title}
             />
             <TextField
               label="Content"
@@ -49,7 +84,12 @@ export default function EditBlogDialog({ open, onClose, blog }) {
               fullWidth
               multiline
               rows={6}
-              value={blog.content}
+              value={editBlog.content}
+              onChange={(e) =>
+                setEditBlog({ ...editBlog, content: e.target.value })
+              }
+              error={!!errors.content}
+              helperText={errors.content}
             />
           </Box>
         </Box>
@@ -79,7 +119,7 @@ export default function EditBlogDialog({ open, onClose, blog }) {
             transition: "all 0.5s ease",
             "&:hover": { backgroundColor: "green", color: "white" },
           }}
-          onClick={onClose}
+          onClick={handleSave}
         >
           Save
         </Button>

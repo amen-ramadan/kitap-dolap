@@ -12,17 +12,21 @@ import {
   MenuItem,
 } from "@mui/material";
 import UploadImage from "../Button/UploadImage";
+import { useSnackbarStore } from "../../store/snackStore";
+import { useBooksStore } from "../../store/modules/books/store";
 
 export default function AddDialog({ open, onClose }) {
   const [book, setBook] = React.useState({
     title: "",
     author: "",
     price: "",
-    condition: 10,
+    condition: 1,
     imageUrl: "",
+    previewUrl: "",
   });
-
   const [errors, setErrors] = React.useState({});
+  const { setOpenSnackbar } = useSnackbarStore();
+  const { addBook } = useBooksStore();
 
   const validate = () => {
     const newErrors = {};
@@ -38,15 +42,20 @@ export default function AddDialog({ open, onClose }) {
 
   const handleAdd = () => {
     if (validate()) {
-      // هون بتضيف الكتاب أو بتكمل العملية
-      console.log("Book ready to be added:", book);
+      try {
+        addBook(book);
+        setOpenSnackbar("Book added successfully", "success");
+      } catch (error) {
+        setOpenSnackbar("Failed to add book" + error, "error");
+      }
       onClose();
       setBook({
         title: "",
         author: "",
         price: "",
-        condition: 10,
+        condition: 1,
         imageUrl: "",
+        previewUrl: "",
       });
     }
   };
@@ -134,7 +143,7 @@ export default function AddDialog({ open, onClose }) {
         </Box>
       </DialogContent>
       <DialogActions sx={{ mb: 1, justifyContent: "space-between" }}>
-        <UploadImage setBook={setBook} book={book} />
+        <UploadImage setBook={setBook} />
         <Box sx={{ display: "flex", gap: 1 }}>
           <Button
             variant="outlined"

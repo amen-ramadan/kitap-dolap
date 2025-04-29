@@ -53,7 +53,7 @@ export default function EditAndRemoveButtons({ blog }) {
       <RemoveBlogDialog
         open={openRemove}
         onClose={handleCloseRemove}
-        title={blog.title}
+        blog={blog}
       />
       <EditBlogDialog open={openEdit} onClose={handleCloseEdit} blog={blog} />
     </div>

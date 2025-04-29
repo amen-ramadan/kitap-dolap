@@ -8,10 +8,14 @@ import {
   Button,
   Box,
 } from "@mui/material";
+import { useSnackbarStore } from "../../store/modules/snackbar";
+import { useBlogsStore } from "../../store/modules/blogs";
 
 export default function AddBlogDialog({ open, onClose }) {
   const [blog, setBlog] = React.useState({ title: "", content: "" });
   const [errors, setErrors] = React.useState({});
+  const { setOpenSnackbar } = useSnackbarStore();
+  const { addBlog } = useBlogsStore();
 
   const validate = () => {
     const newErrors = {};
@@ -23,8 +27,12 @@ export default function AddBlogDialog({ open, onClose }) {
   };
   const handleAdd = () => {
     if (validate()) {
-      // هون بتضيف الكتاب أو بتكمل العملية
-      console.log("Blog ready to be added:", blog);
+      try {
+        addBlog(blog);
+        setOpenSnackbar("Blog added successfully", "success");
+      } catch (error) {
+        setOpenSnackbar("Failed to add blog" + error, "error");
+      }
       onClose();
       setBlog({ title: "", content: "" });
     }

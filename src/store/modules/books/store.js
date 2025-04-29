@@ -5,6 +5,10 @@ import {
   // DeleteFavorite,
   // fetchFavoritesBooks,
   fetchSearchBooks,
+  postBook,
+  editBook,
+  deleteBook,
+  uploadBookImage,
 } from "./api";
 
 export const useBooksStore = create((set, get) => ({
@@ -62,6 +66,52 @@ export const useBooksStore = create((set, get) => ({
 
     set({ filteredBooks: newBooks });
   },
+
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+
+  // Mutations
+  postBook: async (data) => {
+    try {
+      const response = await postBook(data);
+      return response;
+    } catch (error) {
+      console.error("Failed to post book:", error);
+      return null;
+    }
+  },
+  editBook: async (id, data) => {
+    try {
+      const response = await editBook(id, data);
+      return response;
+    } catch (error) {
+      console.error("Failed to edit book:", error);
+      return null;
+    }
+  },
+  deleteBook: async (id) => {
+    try {
+      const response = await deleteBook(id);
+      return response;
+    } catch (error) {
+      console.error("Failed to delete book:", error);
+      return null;
+    }
+  },
+  uploadBookImage: async (data) => {
+    try {
+      const response = await uploadBookImage(data);
+      return response;
+    } catch (error) {
+      console.error("Failed to upload book image:", error);
+      return null;
+    }
+  },
+
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////
 
   // // Favorite
   // favorites: [],

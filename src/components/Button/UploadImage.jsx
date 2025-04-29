@@ -1,14 +1,28 @@
 import React from "react";
 import { Button } from "@mui/material";
+import { uploadBookImage } from "../../store/modules/books/store";
 
-export default function UploadImage({ setBook, book }) {
-  const handleImageChange = (e) => {
+export default function UploadImage({ setBook }) {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      setBook({ ...book, imageUrl: reader.result });
-    };
-    reader.readAsDataURL(file);
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file); // "file" هو اسم المفتاح الذي يتوقعه الـ API
+
+    try {
+      // رفع الصورة والحصول على الروابط من الـ API
+      const response = await uploadBookImage(formData);
+
+      // تحديث الـ state في المكون الأب
+      setBook((prevBook) => ({
+        ...prevBook,
+        imageUrl: response.imageUrl,
+        previewUrl: response.previewUrl,
+      }));
+    } catch (error) {
+      console.error("Failed to upload image:", error);
+    }
   };
 
   return (

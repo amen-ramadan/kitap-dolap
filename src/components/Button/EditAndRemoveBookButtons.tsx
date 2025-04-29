@@ -53,7 +53,7 @@ export default function EditAndRemoveButtons({ book }) {
       <RemoveBookDialog
         open={openRemove}
         onClose={handleCloseRemove}
-        title={book.title}
+        book={book}
       />
       <EditBookDialog open={openEdit} onClose={handleCloseEdit} book={book} />
     </div>

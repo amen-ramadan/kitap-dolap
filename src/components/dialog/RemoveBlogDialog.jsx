@@ -7,18 +7,32 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import { useBlogsStore } from "../../store/modules/blogs/store";
+import { useSnackbarStore } from "../../store/modules/snackbar/store";
 
-export default function RemoveBookDialog({ title, open, onClose }) {
+export default function RemoveBlogDialog({ blog, open, onClose }) {
+  const { deleteBlog } = useBlogsStore();
+  const { setOpenSnackbar } = useSnackbarStore();
+
+  const handleDelete = async () => {
+    try {
+      await deleteBlog(blog.id);
+      setOpenSnackbar("Blog deleted successfully", "success");
+      onClose();
+    } catch (error) {
+      setOpenSnackbar("Failed to delete blog" + error, "error");
+    }
+  };
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
         Are you sure you want to remove{" "}
-        <span style={{ fontWeight: "bold" }}>{title}</span>?
+        <span style={{ fontWeight: "bold" }}>{blog.title}</span>?
       </DialogTitle>
       <DialogContent>
         <Typography>
           This action cannot be undone. Are you sure you want to remove this
-          <span style={{ fontWeight: "bold" }}>{title}</span>?
+          <span style={{ fontWeight: "bold" }}>{blog.title}</span>?
         </Typography>
       </DialogContent>
       <DialogActions sx={{ mb: 1 }}>
@@ -44,7 +58,7 @@ export default function RemoveBookDialog({ title, open, onClose }) {
             transition: "all 0.5s ease",
             "&:hover": { backgroundColor: "darkred", color: "white" },
           }}
-          onClick={onClose}
+          onClick={handleDelete}
           color="error"
         >
           Remove
