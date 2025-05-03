@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useBlogsStore } from "../../store/modules/blogs/store";
-import { useSnackbarStore } from "../../store/modules/snackbar/store";
+import useSnackbarStore from "../../store/snackStore";
 
 export default function RemoveBlogDialog({ blog, open, onClose }) {
   const { deleteBlog } = useBlogsStore();
@@ -20,7 +20,7 @@ export default function RemoveBlogDialog({ blog, open, onClose }) {
       setOpenSnackbar("Blog deleted successfully", "success");
       onClose();
     } catch (error) {
-      setOpenSnackbar("Failed to delete blog" + error, "error");
+      setOpenSnackbar("Failed to delete blog: " + error.message, "error");
     }
   };
   return (

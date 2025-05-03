@@ -1,7 +1,7 @@
 // components/Snackbar.js
 import React from "react";
 import { Snackbar as MuiSnackbar, Alert } from "@mui/material";
-import { useSnackbarStore } from "../store/snackStore";
+import useSnackbarStore from "../../store/snackStore";
 
 export default function CustomSnackbar() {
   const { openSnackbar, messageSnackbar, severity, handleClose } =
@@ -13,6 +13,12 @@ export default function CustomSnackbar() {
       autoHideDuration={6000}
       onClose={handleClose}
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      sx={{
+        "& .MuiSnackbar-root": {
+          position: "fixed",
+          zIndex: 9999,
+        },
+      }}
     >
       <Alert
         onClose={handleClose}

@@ -9,6 +9,7 @@ import {
   editBook,
   deleteBook,
   uploadBookImage,
+  fetchMyListings,
 } from "./api";
 
 export const useBooksStore = create((set, get) => ({
@@ -65,6 +66,21 @@ export const useBooksStore = create((set, get) => ({
     );
 
     set({ filteredBooks: newBooks });
+  },
+
+  // My Listings
+  myListings: [],
+  setMyListings: (listings) => set({ myListings: listings }),
+  fetchMyListings: async () => {
+    set({ isLoading: true });
+    try {
+      const listings = await fetchMyListings();
+      set({ myListings: listings });
+    } catch (error) {
+      console.error("Failed to fetch books:", error);
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
   /////////////////////////////////////////////////////////////////

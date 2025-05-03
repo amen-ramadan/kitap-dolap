@@ -4,9 +4,9 @@ import { persist } from "zustand/middleware";
 const useAuthStore = create(
   persist(
     (set) => ({
-      token: null,
-      setToken: (token) => set({ token }),
-      clearToken: () => set({ token: null }),
+      user: null,
+      setUser: (user) => set({ user }),
+      clearUser: () => set({ user: null }),
     }),
     {
       name: "auth", // name of item in the storage (must be unique)

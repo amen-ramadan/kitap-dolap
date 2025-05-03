@@ -1,5 +1,5 @@
 // components/BookDialog.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -10,13 +10,74 @@ import {
   Box,
   Typography,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import axios from "axios";
 // import { useBooksStore } from "../../store/modules/books/store";
 
+const API_BASE_URL = "https://localhost:9001/api/v1";
+
 const BookDialog = ({ book, open, onClose }) => {
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [checkingFavorite, setCheckingFavorite] = useState(true);
+  const [togglingFavorite, setTogglingFavorite] = useState(false);
+
   // const { checkFavorite } = useBooksStore();
+
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (!book.id) return;
+      setCheckingFavorite(true);
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        setIsFavorited(false);
+        setCheckingFavorite(false);
+        return;
+      }
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/Favorites/check/${book.id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setIsFavorited(response.data);
+      } catch (err) {
+        console.error("Failed to check favorite status:", err);
+        setIsFavorited(false);
+      } finally {
+        setCheckingFavorite(false);
+      }
+    };
+    checkFavoriteStatus();
+  }, [book.id]);
+
+  const handleToggleFavorite = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token || togglingFavorite || !book.id) return;
+
+    setTogglingFavorite(true);
+    const currentStatus = isFavorited;
+    const url = `${API_BASE_URL}/Favorites`;
+    const config = { headers: { Authorization: `Bearer ${token}` } };
+
+    try {
+      if (currentStatus) {
+        await axios.delete(`${url}/${book.id}`, config);
+        setIsFavorited(false);
+      } else {
+        await axios.post(url, { bookListingId: book.id }, config);
+        setIsFavorited(true);
+      }
+    } catch (err) {
+      console.error("Failed to toggle favorite:", err);
+    } finally {
+      setTogglingFavorite(false);
+    }
+  };
 
   // const clickFavorite = async () => {
   //   const result = await checkFavorite(book.id);
@@ -84,11 +145,17 @@ const BookDialog = ({ book, open, onClose }) => {
           </Typography>
           <IconButton
             aria-label="add to favorites"
-            sx={{ mt: 2, ":hover": { color: "red" } }}
-            // onClick={clickFavorite}
+            sx={{ mt: 2, color: isFavorited ? "red" : "inherit" }}
+            onClick={handleToggleFavorite}
+            disabled={checkingFavorite || togglingFavorite}
           >
-            {/* <FavoriteIcon sx={{ color: checkFavorite(book.id) ? "red" : "" }} /> */}
-            <FavoriteIcon />
+            {checkingFavorite || togglingFavorite ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : isFavorited ? (
+              <FavoriteIcon />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
           </IconButton>
           <Box
             sx={{

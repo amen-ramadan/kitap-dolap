@@ -1,37 +1,63 @@
-import React from "react";
-import { Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useFavoritesStore } from "../../store/modules/favorites/store";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import BookCard from "../../components/BookCard/BookCard";
 
 export default function Favorites() {
+  const { favorites, isLoading, fetchFavorites } = useFavoritesStore();
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadFavorites = async () => {
+      try {
+        await fetchFavorites();
+      } catch (err) {
+        setError(err.message || "Failed to load favorites");
+      }
+    };
+    loadFavorites();
+  }, [fetchFavorites]);
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <CircularProgress />
+        <Typography sx={{ ml: 2 }}>Loading favorites...</Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ textAlign: "center", mt: 4, color: "error.main" }}>
+        <Typography variant="h6">Error loading favorites</Typography>
+        <Typography>{error}</Typography>
+      </Box>
+    );
+  }
+
+  if (!favorites || favorites.length === 0) {
+    return (
+      <Box sx={{ textAlign: "center", mt: 4 }}>
+        <Typography variant="h6">No favorites yet!</Typography>
+        <Typography>Go add some books you like.</Typography>
+      </Box>
+    );
+  }
+
   return (
-    <Typography variant="h4" align="center" sx={{ mb: 4, color: "#c69746" }}>
-      My Favorites
-    </Typography>
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        gap: "22px",
+        padding: "20px",
+      }}
+    >
+      {favorites.map((book) => (
+        <BookCard key={book.id} book={book} />
+      ))}
+    </Box>
   );
 }
-
-// import React from "react";
-// import BookCard from "../../components/BookCard/BookCard";
-// import { useBooksStore } from "../../store/modules/books/store";
-// import { Container, Grid, Typography } from "@mui/material";
-
-// export default function Favorites() {
-//   const { favorites, isLoading } = useBooksStore();
-//   console.log(favorites);
-//   return (
-//     <Container>
-//       <Typography variant="h4" sx={{ mb: 2 }}>
-//         Favorites
-//       </Typography>
-//       {isLoading && <Typography variant="body1">Loading...</Typography>}
-//       {favorites.length === 0 && (
-//         <Typography variant="body1">No favorites found</Typography>
-//       )}
-//       <Grid container spacing={2}>
-//         {favorites.map((book) => (
-//           <BookCard key={book.id} book={book} />
-//         ))}
-//       </Grid>
-//     </Container>
-//   );
-// }

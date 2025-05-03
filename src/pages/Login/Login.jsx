@@ -6,7 +6,7 @@ import Button from "../../components/Button/Button";
 import { Link, useNavigate } from "react-router";
 
 const Login = () => {
-  const setToken = useAuthStore((state) => state.setToken);
+  const setUser = useAuthStore((state) => state.setUser);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -43,7 +43,7 @@ const Login = () => {
 
       const data = await response.json();
       console.log("Login successful:", data);
-      setToken(data.jwToken);
+      setUser(data);
       navigate("/");
       alert("Login successful! (Check console for details)");
     } catch (error) {

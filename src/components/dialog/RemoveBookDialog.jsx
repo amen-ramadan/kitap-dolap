@@ -7,8 +7,8 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { useBooksStore } from "../store/modules/books/store";
-import { useSnackbarStore } from "../store/snackStore";
+import { useBooksStore } from "../../store/modules/books/store";
+import useSnackbarStore from "../../store/snackStore";
 
 export default function RemoveBookDialog({ book, open, onClose }) {
   const { deleteBook } = useBooksStore();
@@ -20,7 +20,7 @@ export default function RemoveBookDialog({ book, open, onClose }) {
       setOpenSnackbar("Book deleted successfully", "success");
       onClose();
     } catch (error) {
-      setOpenSnackbar("Failed to delete book" + error, "error");
+      setOpenSnackbar("Failed to delete book: " + error.message, "error");
     }
   };
   return (
@@ -63,7 +63,6 @@ export default function RemoveBookDialog({ book, open, onClose }) {
         >
           Remove
         </Button>
-        <CustomSnackbar />
       </DialogActions>
     </Dialog>
   );

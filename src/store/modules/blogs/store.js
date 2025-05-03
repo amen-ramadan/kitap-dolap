@@ -1,5 +1,11 @@
 import { create } from "zustand";
-import { fetchBlogs, postBlog, editBlog, deleteBlog } from "./api";
+import {
+  fetchBlogs,
+  postBlog,
+  editBlog,
+  deleteBlog,
+  fetchMyBlogPosts,
+} from "./api";
 
 export const useBlogsStore = create((set) => ({
   // Data
@@ -15,6 +21,21 @@ export const useBlogsStore = create((set) => ({
       set({ blogs, isLoading: false });
     } catch (error) {
       console.error("Failed to fetch blogs:", error);
+      set({ isLoading: false });
+    }
+  },
+
+  // My Blogs
+  myBlogs: [],
+  setMyBlogs: (blogs) => set({ myBlogs: blogs }),
+  fetchMyBlogs: async () => {
+    set({ isLoading: true });
+    try {
+      const blogs = await fetchMyBlogPosts();
+      set({ myBlogs: blogs });
+    } catch (error) {
+      console.error("Failed to fetch blogs:", error);
+    } finally {
       set({ isLoading: false });
     }
   },

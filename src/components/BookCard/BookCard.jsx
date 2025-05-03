@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardMedia,
@@ -6,9 +6,15 @@ import {
   Typography,
   Box,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookDialog from "../dialog/DetailsDialog";
+import { useFavoritesStore } from "../../store/modules/favorites/store";
+import axios from "axios";
+
+const API_BASE_URL = "https://localhost:9001/api/v1";
 
 /**
  * Main card component for each book, opens dialog on click.
@@ -17,8 +23,67 @@ import BookDialog from "../dialog/DetailsDialog";
  */
 const BookCard = ({ book, children, height }) => {
   const [open, setOpen] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [checkingFavorite, setCheckingFavorite] = useState(true);
+  const [togglingFavorite, setTogglingFavorite] = useState(false);
+  const { fetchFavorites } = useFavoritesStore();
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      if (!book.id) return;
+      setCheckingFavorite(true);
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        setIsFavorited(false);
+        setCheckingFavorite(false);
+        return;
+      }
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/Favorites/check/${book.id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setIsFavorited(response.data);
+      } catch (err) {
+        console.error("Failed to check favorite status:", err);
+        setIsFavorited(false);
+      } finally {
+        setCheckingFavorite(false);
+      }
+    };
+    checkFavoriteStatus();
+  }, [book.id]);
+
+  const handleToggleFavorite = async (e) => {
+    e.stopPropagation();
+    const token = localStorage.getItem("authToken");
+    if (!token || togglingFavorite || !book.id) return;
+
+    setTogglingFavorite(true);
+    const currentStatus = isFavorited;
+    const url = `${API_BASE_URL}/Favorites`;
+    const config = { headers: { Authorization: `Bearer ${token}` } };
+
+    try {
+      if (currentStatus) {
+        await axios.delete(`${url}/${book.id}`, config);
+        setIsFavorited(false);
+      } else {
+        await axios.post(url, { bookListingId: book.id }, config);
+        setIsFavorited(true);
+      }
+      await fetchFavorites(); // Refresh favorites list
+    } catch (err) {
+      console.error("Failed to toggle favorite:", err);
+    } finally {
+      setTogglingFavorite(false);
+    }
+  };
 
   return (
     <>
@@ -83,7 +148,7 @@ const BookCard = ({ book, children, height }) => {
             <IconButton
               aria-label="add to favorites"
               sx={{
-                color: "#fff",
+                color: isFavorited ? "#ff0000" : "#fff",
                 width: "initial",
                 height: "initial",
                 p: 2,
@@ -91,12 +156,16 @@ const BookCard = ({ book, children, height }) => {
                 backgroundColor: "#1e5d8e",
                 "&:hover": { backgroundColor: "#1e4462" },
               }}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
+              onClick={handleToggleFavorite}
+              disabled={checkingFavorite || togglingFavorite}
             >
-              add to favorites
-              <FavoriteIcon sx={{ ml: 1 }} />
+              {checkingFavorite || togglingFavorite ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : isFavorited ? (
+                <FavoriteIcon sx={{ ml: 1 }} />
+              ) : (
+                <FavoriteBorderIcon sx={{ ml: 1 }} />
+              )}
             </IconButton>
           </Box>
           {children}

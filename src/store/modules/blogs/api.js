@@ -9,7 +9,7 @@ export const api = axios.create({ baseURL: BLOGS_URL });
 
 // Attach auth token for protected endpoints
 api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().token;
+  const token = useAuthStore.getState().user.jwToken;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -19,6 +19,15 @@ api.interceptors.request.use((config) => {
 export const fetchBlogs = async (params) => {
   const response = await axios.get(BLOGS_URL, { params });
   return response.data;
+};
+
+// My Blogs
+export const fetchMyBlogPosts = async () => {
+  const userId = useAuthStore.getState().user.id;
+  const url = `${BLOGS_URL}/author/${userId}`;
+  const response = await api.get(url);
+  console.log("response from my blogs", response);
+  return response;
 };
 
 // Post blog

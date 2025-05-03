@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BookCard from "../../components/BookCard/BookCard";
 import { useBooksStore } from "../../store/modules/books/store";
 import EditAndRemoveBookButtons from "../../components/Button/EditAndRemoveBookButtons";
@@ -6,7 +6,11 @@ import { Grid, Typography } from "@mui/material";
 import AddNewBook from "../../components/Button/AddNewBook";
 
 export default function MyBooks() {
-  const { filteredBooks, isLoading } = useBooksStore();
+  const { myListings, fetchMyListings, isLoading } = useBooksStore();
+
+  useEffect(() => {
+    fetchMyListings();
+  }, [fetchMyListings]);
 
   return (
     <div>
@@ -18,14 +22,14 @@ export default function MyBooks() {
         spacing={3}
         sx={{ mx: "auto", alignItems: "center", justifyContent: "center" }}
       >
-        {!isLoading && filteredBooks?.length === 0 ? (
+        {!isLoading && myListings?.length === 0 ? (
           <Grid>
             <Typography align="center" variant="h4" sx={{ py: 4 }}>
               No books found
             </Typography>
           </Grid>
         ) : (
-          filteredBooks?.map((book) => (
+          myListings?.map((book) => (
             <Grid key={book.id}>
               <BookCard key={book.id} book={book}>
                 <EditAndRemoveBookButtons book={book} />

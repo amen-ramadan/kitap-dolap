@@ -12,7 +12,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import UploadImage from "../Button/UploadImage";
-import { useSnackbarStore } from "../../store/snackStore";
+import useSnackbarStore from "../../store/snackStore";
 import { useBooksStore } from "../../store/modules/books/store";
 
 export default function AddDialog({ open, onClose }) {
@@ -26,7 +26,7 @@ export default function AddDialog({ open, onClose }) {
   });
   const [errors, setErrors] = React.useState({});
   const { setOpenSnackbar } = useSnackbarStore();
-  const { addBook } = useBooksStore();
+  const { postBook } = useBooksStore();
 
   const validate = () => {
     const newErrors = {};
@@ -40,23 +40,23 @@ export default function AddDialog({ open, onClose }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (validate()) {
       try {
-        addBook(book);
+        await postBook(book);
         setOpenSnackbar("Book added successfully", "success");
+        onClose();
+        setBook({
+          title: "",
+          author: "",
+          price: "",
+          condition: 1,
+          imageUrl: "",
+          previewUrl: "",
+        });
       } catch (error) {
-        setOpenSnackbar("Failed to add book" + error, "error");
+        setOpenSnackbar("Failed to add book: " + error.message, "error");
       }
-      onClose();
-      setBook({
-        title: "",
-        author: "",
-        price: "",
-        condition: 1,
-        imageUrl: "",
-        previewUrl: "",
-      });
     }
   };
 

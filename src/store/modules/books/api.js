@@ -8,7 +8,7 @@ export const api = axios.create({ baseURL: API_SEARCH_URL });
 
 // Attach auth token for protected endpoints
 api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().token;
+  const token = useAuthStore.getState().user.jwToken;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -25,20 +25,33 @@ export const fetchSearchBooks = async (params) => {
 
 // Put book
 export const editBook = async (id, data) => {
-  const response = await api.put(`${API_SEARCH_URL}/BookListing/${id}`, data);
+  const response = await api.put(`${API_SEARCH_URL}BookListing/${id}`, data);
   return response;
 };
 
 // Delete book
 export const deleteBook = async (id) => {
-  const response = await api.delete(`${API_SEARCH_URL}/BookListing/${id}`);
+  const response = await api.delete(`${API_SEARCH_URL}BookListing/${id}`);
   return response;
 };
 
 // Post book
 export const postBook = async (data) => {
-  const response = await api.post(`${API_SEARCH_URL}/BookListing`, data);
+  const response = await api.post(`${API_SEARCH_URL}BookListing`, data);
   return response;
+};
+
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+// Fetches the current user's book listings with pagination
+export const fetchMyListings = async () => {
+  const userId = useAuthStore.getState().user.id;
+  const url = `${API_SEARCH_URL}/BookListing/seller/${userId}`;
+  const response = await api.get(url);
+  console.log("Response from my listings:", response.data);
+  return response.data;
 };
 
 /////////////////////////////////////////////////////////////////
@@ -48,38 +61,11 @@ export const postBook = async (data) => {
 // Upload book image
 export const uploadBookImage = async (data) => {
   const response = await api.post(
-    `${API_SEARCH_URL}/BookListing/upload-image`,
+    `${API_SEARCH_URL}BookListing/upload-image`,
     data
   );
   return response;
 };
-
-/////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////
-
-// // Favorites endpoints
-// export const fetchFavoritesBooks = async () => {
-//   const { data } = await api.get("Favorites");
-//   return data;
-// };
-
-// export const CheckFavoriteBook = async (bookId) => {
-//   return await api.get(`Favorites/check/${bookId}`);
-// };
-
-// export const AddFavorite = async (bookId) => {
-//   const response = await api.post("Favorites", { bookListingId: bookId });
-//   return response;
-// };
-
-// export const DeleteFavorite = async (id) => {
-//   const response = await api.delete(`Favorites/${id}`);
-//   if (response.status === 200 || response.status === 204) {
-//     return true;
-//   }
-//   return false;
-// };
 
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////

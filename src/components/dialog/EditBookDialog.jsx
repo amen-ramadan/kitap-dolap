@@ -12,26 +12,31 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useBooksStore } from "../../store/modules/books/store";
+import UploadImage from "../Button/UploadImage";
+import useSnackbarStore from "../../store/snackStore";
 
 export default function EditBookDialog({ open, onClose, book }) {
-  const { setOpenSnackbar, updateBook } = useBooksStore();
+  const { editBook } = useBooksStore();
+  const { setOpenSnackbar } = useSnackbarStore();
   const [formData, setFormData] = React.useState({
     title: book.title,
     author: book.author,
     price: book.price,
     condition: book.condition,
-    imageUrl: "",
-    previewUrl: "",
+    imageUrl: book.imageUrl,
+    previewUrl: book.previewUrl,
   });
-  const handleSave = () => {
+
+  const handleSave = async () => {
     try {
-      updateBook({ ...book, ...formData });
+      await editBook(book.id, { ...book, ...formData });
       setOpenSnackbar("Book updated successfully", "success");
+      onClose();
     } catch (error) {
-      setOpenSnackbar("Failed to update book" + error, "error");
+      setOpenSnackbar("Failed to update book: " + error.message, "error");
     }
-    onClose();
   };
+
   return (
     <Dialog
       open={open}

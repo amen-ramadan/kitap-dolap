@@ -8,14 +8,14 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import { useSnackbarStore } from "../../store/modules/snackbar";
-import { useBlogsStore } from "../../store/modules/blogs";
+import useSnackbarStore from "../../store/snackStore";
+import { useBlogsStore } from "../../store/modules/blogs/store";
 
 export default function AddBlogDialog({ open, onClose }) {
   const [blog, setBlog] = React.useState({ title: "", content: "" });
   const [errors, setErrors] = React.useState({});
   const { setOpenSnackbar } = useSnackbarStore();
-  const { addBlog } = useBlogsStore();
+  const { postBlog } = useBlogsStore();
 
   const validate = () => {
     const newErrors = {};
@@ -25,18 +25,20 @@ export default function AddBlogDialog({ open, onClose }) {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  const handleAdd = () => {
+
+  const handleAdd = async () => {
     if (validate()) {
       try {
-        addBlog(blog);
+        await postBlog(blog);
         setOpenSnackbar("Blog added successfully", "success");
+        onClose();
+        setBlog({ title: "", content: "" });
       } catch (error) {
-        setOpenSnackbar("Failed to add blog" + error, "error");
+        setOpenSnackbar("Failed to add blog: " + error.message, "error");
       }
-      onClose();
-      setBlog({ title: "", content: "" });
     }
   };
+
   return (
     <Dialog
       open={open}
