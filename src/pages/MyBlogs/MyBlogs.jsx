@@ -17,12 +17,18 @@ import EditAndRemoveButtons from "../../components/Button/EditAndRemoveBlogButto
 const overlayBg = "#1d659433";
 
 export default function MyBlogs() {
-  const { myBlogs, fetchMyBlogs, isLoading } = useBlogsStore();
+  const { myBlogs, fetchMyBlogs, isLoading, lastAction } = useBlogsStore();
   const [openBlog, setOpenBlog] = useState(null);
 
   useEffect(() => {
     fetchMyBlogs();
   }, [fetchMyBlogs]);
+
+  useEffect(() => {
+    if (lastAction) {
+      fetchMyBlogs();
+    }
+  }, [lastAction, fetchMyBlogs]);
 
   const handleOpen = (blog) => {
     setOpenBlog(blog);
@@ -55,7 +61,7 @@ export default function MyBlogs() {
                 flexWrap: "wrap",
               }}
             >
-              {myBlogs.map((blog) => (
+              {myBlogs?.map((blog) => (
                 <Grid key={blog.id} sx={{ width: "46%" }}>
                   <Paper
                     onClick={() => handleOpen(blog)}

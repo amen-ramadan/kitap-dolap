@@ -6,11 +6,20 @@ import { Grid, Typography } from "@mui/material";
 import AddNewBook from "../../components/Button/AddNewBook";
 
 export default function MyBooks() {
-  const { myListings, fetchMyListings, isLoading } = useBooksStore();
+  const { myListings, fetchMyListings, isLoading, lastAction } =
+    useBooksStore();
 
+  // Effect to fetch books initially
   useEffect(() => {
     fetchMyListings();
   }, [fetchMyListings]);
+
+  // Effect to refresh books after any action
+  useEffect(() => {
+    if (lastAction) {
+      fetchMyListings();
+    }
+  }, [lastAction, fetchMyListings]);
 
   return (
     <div>

@@ -26,7 +26,7 @@ const Navbar = () => {
     setAnchorEl(null);
   };
   const handleLogout = () => {
-    useAuthStore.getState().clearToken();
+    useAuthStore.getState().clearUser();
     setAnchorEl(null);
     navigate("/login");
 };

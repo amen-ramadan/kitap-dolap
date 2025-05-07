@@ -13,29 +13,29 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookDialog from "../dialog/DetailsDialog";
 import { useFavoritesStore } from "../../store/modules/favorites/store";
 import axios from "axios";
-
+import useAuthStore from "../../store/authStore";
 const API_BASE_URL = "https://localhost:9001/api/v1";
-
+ 
 /**
- * Main card component for each book, opens dialog on click.
- * Props:
- * - book: { imageUrl, title, author, price, sellerName }
- */
+* Main card component for each book, opens dialog on click.
+* Props:
+* - book: { imageUrl, title, author, price, sellerName }
+*/
 const BookCard = ({ book, children, height }) => {
   const [open, setOpen] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [checkingFavorite, setCheckingFavorite] = useState(true);
   const [togglingFavorite, setTogglingFavorite] = useState(false);
   const { fetchFavorites } = useFavoritesStore();
-
+ 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+ 
   useEffect(() => {
     const checkFavoriteStatus = async () => {
       if (!book.id) return;
       setCheckingFavorite(true);
-      const token = localStorage.getItem("authToken");
+      const token = useAuthStore.getState().user.jwToken;
       if (!token) {
         setIsFavorited(false);
         setCheckingFavorite(false);
@@ -58,17 +58,17 @@ const BookCard = ({ book, children, height }) => {
     };
     checkFavoriteStatus();
   }, [book.id]);
-
+ 
   const handleToggleFavorite = async (e) => {
     e.stopPropagation();
-    const token = localStorage.getItem("authToken");
+    const token = useAuthStore.getState().user.jwToken;
     if (!token || togglingFavorite || !book.id) return;
-
+ 
     setTogglingFavorite(true);
     const currentStatus = isFavorited;
     const url = `${API_BASE_URL}/Favorites`;
     const config = { headers: { Authorization: `Bearer ${token}` } };
-
+ 
     try {
       if (currentStatus) {
         await axios.delete(`${url}/${book.id}`, config);
@@ -84,7 +84,7 @@ const BookCard = ({ book, children, height }) => {
       setTogglingFavorite(false);
     }
   };
-
+ 
   return (
     <>
       <Card
@@ -175,5 +175,5 @@ const BookCard = ({ book, children, height }) => {
     </>
   );
 };
-
+ 
 export default BookCard;

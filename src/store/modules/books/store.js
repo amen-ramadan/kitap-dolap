@@ -1,9 +1,5 @@
 import { create } from "zustand";
 import {
-  // AddFavorite,
-  // CheckFavoriteBook,
-  // DeleteFavorite,
-  // fetchFavoritesBooks,
   fetchSearchBooks,
   postBook,
   editBook,
@@ -70,16 +66,52 @@ export const useBooksStore = create((set, get) => ({
 
   // My Listings
   myListings: [],
+  lastAction: null, // Track the last action performed
+
+  // Actions
   setMyListings: (listings) => set({ myListings: listings }),
+  setLastAction: (action) => set({ lastAction: action }),
+
+  // Fetch listings
   fetchMyListings: async () => {
     set({ isLoading: true });
     try {
-      const listings = await fetchMyListings();
-      set({ myListings: listings });
+      const data = await fetchMyListings();
+      set({ myListings: data });
     } catch (error) {
-      console.error("Failed to fetch books:", error);
+      console.error("Failed to fetch listings:", error);
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  // Delete listing
+  deleteListing: async (id) => {
+    try {
+      await deleteBook(id);
+      set({ lastAction: "delete" }); // Update lastAction after successful deletion
+    } catch (error) {
+      console.error("Failed to delete listing:", error);
+    }
+  },
+
+  // Update listing
+  updateListing: async (id, data) => {
+    try {
+      await editBook(id, data);
+      set({ lastAction: "update" }); // Update lastAction after successful update
+    } catch (error) {
+      console.error("Failed to update listing:", error);
+    }
+  },
+
+  // Create listing
+  createListing: async (data) => {
+    try {
+      await postBook(data);
+      set({ lastAction: "create" }); // Update lastAction after successful creation
+    } catch (error) {
+      console.error("Failed to create listing:", error);
     }
   },
 

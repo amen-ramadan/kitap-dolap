@@ -12,29 +12,11 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Fetches the details of the user's favorite book listings
 export const fetchFavoriteListings = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/Favorites`);
-
-    // Assuming the backend returns an array of BookListingDto objects directly
-    // If it returns a wrapper object (like PagedResponse or { succeeded: true, data: [...] }), adjust parsing accordingly.
-    if (Array.isArray(response.data)) {
-      return response.data; // Return the array of listings
-    } else if (response.data && Array.isArray(response.data.data)) {
-      // Handle case where it might be wrapped in { data: [...] }
-      console.warn("Favorites API might be returning a wrapped response.");
-      return response.data.data;
-    } else {
-      // Handle unexpected structure
-      console.error(
-        "Unexpected response structure for favorites:",
-        response.data
-      );
-      throw new Error(
-        "Received an unexpected response structure from the server."
-      );
-    }
+    const response = await api.get(`/Favorites`);
+    console.log("Favorites response:", response.data);
+    return response.data;
   } catch (error) {
     console.error(
       "Axios error fetching favorites:",
@@ -44,4 +26,11 @@ export const fetchFavoriteListings = async () => {
       error.response?.data?.message || "Failed to fetch favorites"
     );
   }
+};
+
+// single book listing by its ID
+export const fetchBookById = async (id) => {
+  const response = await api.get(`/BookListing/${id}`);
+  console.log("Book listing response:", response.data);
+  return response.data;
 };

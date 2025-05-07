@@ -16,22 +16,23 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import axios from "axios";
+import useAuthStore from "../../store/authStore";
 // import { useBooksStore } from "../../store/modules/books/store";
-
+ 
 const API_BASE_URL = "https://localhost:9001/api/v1";
-
+ 
 const BookDialog = ({ book, open, onClose }) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [checkingFavorite, setCheckingFavorite] = useState(true);
   const [togglingFavorite, setTogglingFavorite] = useState(false);
-
+ 
   // const { checkFavorite } = useBooksStore();
-
+ 
   useEffect(() => {
     const checkFavoriteStatus = async () => {
       if (!book.id) return;
       setCheckingFavorite(true);
-      const token = localStorage.getItem("authToken");
+      const token = useAuthStore.getState().user.jwToken;
       if (!token) {
         setIsFavorited(false);
         setCheckingFavorite(false);
@@ -54,16 +55,16 @@ const BookDialog = ({ book, open, onClose }) => {
     };
     checkFavoriteStatus();
   }, [book.id]);
-
+ 
   const handleToggleFavorite = async () => {
-    const token = localStorage.getItem("authToken");
+    const token = useAuthStore.getState().user.jwToken;
     if (!token || togglingFavorite || !book.id) return;
-
+ 
     setTogglingFavorite(true);
     const currentStatus = isFavorited;
     const url = `${API_BASE_URL}/Favorites`;
     const config = { headers: { Authorization: `Bearer ${token}` } };
-
+ 
     try {
       if (currentStatus) {
         await axios.delete(`${url}/${book.id}`, config);
@@ -78,7 +79,7 @@ const BookDialog = ({ book, open, onClose }) => {
       setTogglingFavorite(false);
     }
   };
-
+ 
   // const clickFavorite = async () => {
   //   const result = await checkFavorite(book.id);
   //   if (result) {
@@ -167,7 +168,7 @@ const BookDialog = ({ book, open, onClose }) => {
           >
             <Typography variant="h5">Contact the seller</Typography>
             <Box sx={{ display: "flex", gap: 2, alignItems: "center", mt: 2 }}>
-              <Typography>Number: {book.phone || "0123456789"}</Typography>
+              <Typography>Number: {book.phone || "+905314971560"}</Typography>
               <IconButton
                 sx={{
                   width: 40,
@@ -176,6 +177,9 @@ const BookDialog = ({ book, open, onClose }) => {
                   ml: 1,
                   "&:hover": { backgroundColor: "#1d6594ba" },
                 }}
+                href={`https://api.whatsapp.com/send?phone=+905314971560&text=${encodeURIComponent(
+                  "Hello, I'm interested in your book: " + book.title
+                )}`}
               >
                 <WhatsAppIcon sx={{ color: "white" }} />
               </IconButton>

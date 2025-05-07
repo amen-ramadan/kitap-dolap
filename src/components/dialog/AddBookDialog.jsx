@@ -14,13 +14,16 @@ import {
 import UploadImage from "../Button/UploadImage";
 import useSnackbarStore from "../../store/snackStore";
 import { useBooksStore } from "../../store/modules/books/store";
+import useAuthStore from "../../store/authStore";
 
 export default function AddDialog({ open, onClose }) {
+  const sellerName = useAuthStore.getState().user.userName;
   const [book, setBook] = React.useState({
     title: "",
     author: "",
     price: "",
     condition: 1,
+    sellerName: sellerName,
     imageUrl: "",
     previewUrl: "",
   });
@@ -51,6 +54,7 @@ export default function AddDialog({ open, onClose }) {
           author: "",
           price: "",
           condition: 1,
+          sellerName: sellerName,
           imageUrl: "",
           previewUrl: "",
         });

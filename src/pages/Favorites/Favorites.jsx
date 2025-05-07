@@ -4,8 +4,11 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import BookCard from "../../components/BookCard/BookCard";
 
 export default function Favorites() {
-  const { favorites, isLoading, fetchFavorites } = useFavoritesStore();
+  const { favorites, favoriteBooks, isLoading, fetchFavorites } =
+    useFavoritesStore();
   const [error, setError] = useState(null);
+  //console.log("favorites", favorites);
+  //console.log("favoriteBooks", favoriteBooks);
 
   useEffect(() => {
     const loadFavorites = async () => {
@@ -36,7 +39,7 @@ export default function Favorites() {
     );
   }
 
-  if (!favorites || favorites.length === 0) {
+  if (!favoriteBooks || favoriteBooks.length === 0) {
     return (
       <Box sx={{ textAlign: "center", mt: 4 }}>
         <Typography variant="h6">No favorites yet!</Typography>
@@ -55,7 +58,7 @@ export default function Favorites() {
         padding: "20px",
       }}
     >
-      {favorites.map((book) => (
+      {favoriteBooks.map((book) => (
         <BookCard key={book.id} book={book} />
       ))}
     </Box>
