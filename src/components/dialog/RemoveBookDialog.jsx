@@ -17,7 +17,7 @@ export default function RemoveBookDialog({ book, open, onClose }) {
   const handleDelete = async () => {
     try {
       await deleteBook(book.id);
-      setOpenSnackbar("Book deleted successfully", "success");
+      setOpenSnackbar("Book deleted successfully", "error");
       onClose();
     } catch (error) {
       setOpenSnackbar("Failed to delete book: " + error.message, "error");

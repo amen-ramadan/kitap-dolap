@@ -47,7 +47,7 @@ export default function AddDialog({ open, onClose }) {
     if (validate()) {
       try {
         await postBook(book);
-        setOpenSnackbar("Book added successfully", "success");
+        setOpenSnackbar("Book added successfully", "info");
         onClose();
         setBook({
           title: "",

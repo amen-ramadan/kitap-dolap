@@ -10,9 +10,9 @@ export default function CustomSnackbar() {
   return (
     <MuiSnackbar
       open={openSnackbar}
-      autoHideDuration={6000}
+      autoHideDuration={2500}
       onClose={handleClose}
-      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      anchorOrigin={{ vertical: "center", horizontal: "center" }}
       sx={{
         "& .MuiSnackbar-root": {
           position: "fixed",

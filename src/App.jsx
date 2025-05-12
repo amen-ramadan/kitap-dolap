@@ -9,6 +9,7 @@ import MyBooks from "./pages/MyBooks/MyBooks.jsx";
 import MyBlogs from "./pages/MyBlogs/MyBlogs.jsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import Profile from "./pages/Profile/Profile.jsx";
 
 function App() {
   return (
@@ -41,6 +42,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <MyBlogs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />

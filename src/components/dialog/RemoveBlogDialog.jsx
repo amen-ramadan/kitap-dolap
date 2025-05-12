@@ -17,7 +17,7 @@ export default function RemoveBlogDialog({ blog, open, onClose }) {
   const handleDelete = async () => {
     try {
       await deleteBlog(blog.id);
-      setOpenSnackbar("Blog deleted successfully", "success");
+      setOpenSnackbar("Blog deleted successfully", "error");
       onClose();
     } catch (error) {
       setOpenSnackbar("Failed to delete blog: " + error.message, "error");

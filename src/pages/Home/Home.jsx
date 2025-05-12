@@ -10,7 +10,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [fetchBooks]);
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>

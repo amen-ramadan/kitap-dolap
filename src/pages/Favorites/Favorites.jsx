@@ -4,11 +4,8 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import BookCard from "../../components/BookCard/BookCard";
 
 export default function Favorites() {
-  const { favorites, favoriteBooks, isLoading, fetchFavorites } =
-    useFavoritesStore();
+  const { favoriteBooks, isLoading, fetchFavorites } = useFavoritesStore();
   const [error, setError] = useState(null);
-  //console.log("favorites", favorites);
-  //console.log("favoriteBooks", favoriteBooks);
 
   useEffect(() => {
     const loadFavorites = async () => {

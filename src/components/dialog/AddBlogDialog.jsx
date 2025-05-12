@@ -30,7 +30,7 @@ export default function AddBlogDialog({ open, onClose }) {
     if (validate()) {
       try {
         await postBlog(blog);
-        setOpenSnackbar("Blog added successfully", "success");
+        setOpenSnackbar("Blog added successfully", "info");
         onClose();
         setBlog({ title: "", content: "" });
       } catch (error) {
