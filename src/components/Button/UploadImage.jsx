@@ -14,9 +14,6 @@ export default function UploadImage({ setBook }) {
     try {
       // رفع الصورة والحصول على الروابط من الـ API
       const response = await uploadBookImage(formData);
-
-      console.log("API Response:", response.data);
-
       // تحديث الـ state في المكون الأب
       setBook((prevBook) => ({
         ...prevBook,

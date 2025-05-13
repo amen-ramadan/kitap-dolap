@@ -10,7 +10,11 @@ import MyBlogs from "./pages/MyBlogs/MyBlogs.jsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Profile from "./pages/Profile/Profile.jsx";
-
+import AdminLayout from "./pages/Admin/AdminLayout.jsx";
+import AdminBooks from "./pages/Admin/AdminBooks.jsx";
+import AdminBlogs from "./pages/Admin/AdminBlogs.jsx";
+import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
+import AdminUsers from "./pages/Admin/AdminUsers.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -53,6 +57,20 @@ function App() {
               </ProtectedRoute>
             }
           />
+        </Route>
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="books" element={<AdminBooks />} />
+          <Route path="blogs" element={<AdminBlogs />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -18,19 +18,19 @@ import {
 import useAuthStore from "../../store/authStore";
 import { useUserStore } from "../../store/modules/user/store";
 import "./Profile.css";
-import { useNavigate } from "react-router";
-
+import { Link, useNavigate } from "react-router";
+import useSnackbarStore from "../../store/snackStore";
 const Profile = () => {
   const navigate = useNavigate();
+
   const {
     userData,
-    useUserProfileQuery,
-    useUpdateProfileMutation,
-    useDeleteAccountMutation,
+    isLoading,
+    error,
+    fetchProfile,
+    updateProfile,
+    deleteAccount,
   } = useUserStore();
-
-  // Fetch user data
-  useUserProfileQuery();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -40,23 +40,24 @@ const Profile = () => {
     email: "",
   });
 
-  // Update operation
-  const updateMutation = useUpdateProfileMutation();
-
-  // Delete account operation
-  const deleteMutation = useDeleteAccountMutation();
+  const { setOpenSnackbar } = useSnackbarStore();
 
   // Dialog state for delete confirmation
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  // Fetch user data only once when component mounts
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   // Update form when user data is loaded
   useEffect(() => {
     if (userData) {
       setFormData({
-        firstName: userData.firstName || "",
-        lastName: userData.lastName || "",
-        userName: userData.userName || "",
-        email: userData.email || "",
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        userName: userData.userName,
+        email: userData.email,
       });
     }
   }, [userData]);
@@ -71,24 +72,43 @@ const Profile = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    updateMutation(formData);
+    try {
+      await updateProfile(formData);
+      fetchProfile();
+      setFormData({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        userName: userData.userName,
+        email: userData.email,
+      });
+      setOpenSnackbar("Profile updated successfully", "success");
+    } catch {
+      setOpenSnackbar("Failed to update profile", "error");
+    }
   };
 
   // Handle account deletion
-  const handleDeleteAccount = () => {
-    deleteMutation();
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteAccount();
+      setOpenSnackbar("Account deleted successfully", "success");
+      navigate("/register");
+    } catch {
+      setOpenSnackbar("Failed to delete account", "error");
+    }
     setDeleteDialogOpen(false);
   };
 
   // Handle logout
   const handleLogout = () => {
     useAuthStore.getState().clearUser();
+    setOpenSnackbar("Logged out successfully", "success");
     navigate("/login");
   };
 
-  if (updateMutation.isLoading) {
+  if (isLoading && !userData) {
     return (
       <Box
         display="flex"
@@ -101,10 +121,10 @@ const Profile = () => {
     );
   }
 
-  if (updateMutation.isError) {
+  if (error) {
     return (
       <Alert severity="error" sx={{ mt: 2 }}>
-        Error loading profile: {updateMutation.error.message}
+        {error}
       </Alert>
     );
   }
@@ -123,18 +143,6 @@ const Profile = () => {
         >
           My Profile
         </Typography>
-
-        {updateMutation.isSuccess && (
-          <Alert severity="success" sx={{ mb: 3 }}>
-            Profile updated successfully!
-          </Alert>
-        )}
-
-        {updateMutation.isError && (
-          <Alert severity="error" sx={{ mb: 3 }}>
-            Error updating profile: {updateMutation.error.message}
-          </Alert>
-        )}
 
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
@@ -191,14 +199,10 @@ const Profile = () => {
                 variant="contained"
                 color="primary"
                 size="large"
-                disabled={updateMutation.isLoading}
+                disabled={isLoading}
                 sx={{ mt: 2 }}
               >
-                {updateMutation.isLoading ? (
-                  <CircularProgress size={24} />
-                ) : (
-                  "Save Changes"
-                )}
+                {isLoading ? <CircularProgress size={24} /> : "Save Changes"}
               </Button>
             </Grid>
           </Grid>
@@ -217,6 +221,14 @@ const Profile = () => {
             onClick={() => setDeleteDialogOpen(true)}
           >
             Delete Account
+          </Button>
+
+          <Button
+            variant="outlined"
+            color="secondary"
+            element={<Link to="/" />}
+          >
+            Cancel
           </Button>
         </Box>
       </Paper>
@@ -241,13 +253,9 @@ const Profile = () => {
             onClick={handleDeleteAccount}
             color="error"
             variant="contained"
-            disabled={deleteMutation.isLoading}
+            disabled={isLoading}
           >
-            {deleteMutation.isLoading ? (
-              <CircularProgress size={24} />
-            ) : (
-              "Delete Account"
-            )}
+            {isLoading ? <CircularProgress size={24} /> : "Delete Account"}
           </Button>
         </DialogActions>
       </Dialog>

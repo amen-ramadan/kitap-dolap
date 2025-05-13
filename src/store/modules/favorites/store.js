@@ -39,14 +39,11 @@ export const useFavoritesStore = create((set, get) => ({
     set({ isLoading: true });
     try {
       const data = await fetchFavoriteListings();
-      console.log("Data received in store:", data);
       set({ favorites: data });
 
       // Extract book IDs and fetch their details
       const bookIds = data.map((fav) => fav.bookListingId);
       await get().fetchFavoriteBooks(bookIds);
-
-      //console.log("Favorites state after setting:", get().favorites);
     } catch (error) {
       console.error("Failed to fetch favorites:", error);
     } finally {

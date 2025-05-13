@@ -16,7 +16,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate ();
+  const navigate = useNavigate();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,11 +25,16 @@ const Navbar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleProfile = () => {
+    navigate("/profile");
+  };
+
   const handleLogout = () => {
     useAuthStore.getState().clearUser();
     setAnchorEl(null);
     navigate("/login");
-};
+  };
 
   return (
     <>
@@ -98,7 +103,7 @@ const Navbar = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
+              <MenuItem onClick={handleProfile}>Profile</MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </Box>

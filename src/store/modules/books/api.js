@@ -50,7 +50,6 @@ export const fetchMyListings = async () => {
   const userId = useAuthStore.getState().user.id;
   const url = `${API_SEARCH_URL}BookListing/seller/${userId}`;
   const response = await api.get(url);
-  console.log("Response from my listings:", response.data);
   return response.data.data;
 };
 

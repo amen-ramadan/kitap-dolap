@@ -26,7 +26,6 @@ export const fetchMyBlogPosts = async () => {
   const userId = useAuthStore.getState().user.id;
   const url = `${BLOGS_URL}/author/${userId}`;
   const response = await api.get(url);
-  console.log("response from my blogs", response);
   return response.data;
 };
 

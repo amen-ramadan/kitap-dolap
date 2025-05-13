@@ -15,7 +15,6 @@ api.interceptors.request.use((config) => {
 export const fetchFavoriteListings = async () => {
   try {
     const response = await api.get(`/Favorites`);
-    console.log("Favorites response:", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -31,6 +30,5 @@ export const fetchFavoriteListings = async () => {
 // single book listing by its ID
 export const fetchBookById = async (id) => {
   const response = await api.get(`/BookListing/${id}`);
-  console.log("Book listing response:", response.data);
   return response.data;
 };

@@ -12,7 +12,7 @@ export default function MyBooks() {
   // Effect to fetch books initially
   useEffect(() => {
     fetchMyListings();
-  }, [fetchMyListings, lastAction, myListings]);
+  }, [fetchMyListings, lastAction]);
 
   // Effect to refresh books after any action
   useEffect(() => {

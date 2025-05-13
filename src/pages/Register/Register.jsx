@@ -59,17 +59,20 @@ const Register = () => {
     setLoading(true);
     setError("");
 
-    console.log("Sending data:", formData);
+    "Sending data:", formData;
 
     try {
-      const response = await fetch("https://localhost:9001/api/account/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://localhost:9001/api/account/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const responseText = await response.text();
-      console.log("Raw server response:", responseText);
+      "Raw server response:", responseText;
 
       if (!response.ok) {
         try {
@@ -80,13 +83,15 @@ const Register = () => {
           );
         } catch (e) {
           console.error("Failed to parse error response:", e);
-          throw new Error(responseText || "Registration failed. Please try again.");
+          throw new Error(
+            responseText || "Registration failed. Please try again."
+          );
         }
       }
 
       try {
         const data = JSON.parse(responseText);
-        console.log("Registration successful:", data);
+        "Registration successful:", data;
         alert("Account created successfully!");
       } catch {
         alert("Account created successfully! (Non-JSON response)");
